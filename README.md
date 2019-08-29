@@ -1,5 +1,8 @@
 # EP1 - OO 2019.2 (UnB - Gama)
 
+Turmas Renato e Carla
+Data de entrega: 01/10/2019
+
 ## Descrição
 
 Victoria possui um pequeno comércio que atende a população de seu bairro. Com o passar do tempo, a pequena empreendedora foi adquirindo experiência e, por conta de seu excelente poder de negociação, ela conseguia reduzir significativamente o preço dos produtos oferecidos.
