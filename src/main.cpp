@@ -3,6 +3,7 @@
 #include <vector>
 #include "funcionario.hpp"
 #include "produto.hpp"
+#include "cliente.hpp"
 
 #ifdef __WIN32
 	#define CLEAR  "cls"
@@ -13,19 +14,51 @@
 
 using namespace std;
 
+//Catálogo de funções que são utilizadas durante o programa.
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados);
-void loja(vector <Produto*>& produtos_da_padaria);
+void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria);
+void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria);
 void modo_estoque(vector <Produto*>& produtos_da_padaria);
+string get_string();
 
+template <typename T1>
+T1 getInput();
 
 int main(){
+	vector <Cliente*> clientes;
 	vector <Funcionario*> funcionarios;
 	vector <Produto*> produtos;
 	menu_funcionario(funcionarios);
-	loja(produtos);
+	loja(produtos,clientes);
+}
+
+//apenas para pegar o nome de pessoas, produtos e variaveis do tipo string
+string getString(){
+    string valor;
+    getline(cin, valor);
+    return valor;
+}
+
+// Serve para colocar as variaveis que não são do tipo string.
+template <typename T1>
+T1 getInput(){
+    while(true){
+ 	   T1 valor;
+ 	   cin >> valor;
+ 	   if(cin.fail()){
+ 	       cin.clear();
+ 	       cin.ignore(32767,'\n');
+ 	       cout << "Entrada inválida! Insira novamente: " << endl;
+ 	   }
+ 	   else{
+ 	       cin.ignore(32767,'\n');
+ 	       return valor;
+ 	   }
+    }
 }
 
 // criando o login do funcionario para poder utilizar a plataforma
+
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	string nome,cpf,email,funcao, senha;
 	int idade, escolha;
@@ -34,19 +67,21 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	Funcionario *funcionario_da_padaria;
 	while(menu_funcionario){
 		system(CLEAR);
+		cout << "---------------MENU DE FUNCIONÁRIOS---------------\n";
+		cout << "Digite o número respectivo ao que deseja utilizar:\n" << endl;
 		cout << "1 - Entrar no sistema" << endl;
 		cout << "2 - Registrar um funcionario" << endl;
 		cout << "->> ";
-		cin >> escolha;
+		escolha = getInput<int>();
 
 		if(escolha >= 1 && escolha <= 2){
 			switch(escolha){
 				case 1:
 					cout << "Digite o funcionário que irá utilizar a plataforma: ";
-					cin >> nome;
+					nome = getString();
 
 					cout << "Digite a respectiva senha de usuário: ";
-					cin >> senha;
+					senha = getString();
 
 					if(!funcionarios_cadastrados.empty()){
 						for(Funcionario *buscador : funcionarios_cadastrados){
@@ -61,22 +96,22 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 
 				case 2:
 					cout<< "Digite o nome do funcionário: ";
-					cin >> nome;
+					nome = getString();
 
 					cout<< "Digite a idade do funcionário: ";
-					cin >> idade;
+					idade = getInput<int>();
 
 					cout << "Digite o CPF do funcionário: ";
-					cin >> cpf;
+					cpf = getString();
 
 					cout << "Digite o Email do funcionário: ";
-					cin >> email;
+					email = getString();
 
 					cout << "Digite a função do funcionário: ";
-					cin >> funcao;
+					funcao = getString();
 
 					cout << "Digite a senha do funcionário(4-16 caracteres sem espaços): ";
-					cin >> senha;
+					senha = getString();
 
 					cout << "Funcionario registrado com sucesso!!" << endl;
 					cout << "\nDigite qualquer tecla para continuar..." << endl;
@@ -91,14 +126,15 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	}
 }
 
-void loja(vector <Produto*>& produtos_da_padaria){
+void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria){
 	bool continua = true;
 	int escolha;
 	char pause;
 
 	while(continua){
 		system(CLEAR);
-		cout << "     Bem vindos à minha loja" << endl;
+		//cout << "     Bem vindos à minha loja" << endl;
+		cout << "---------------MENU PRINCIPAL---------------\n";
 		cout << "Digite o modo que deseja utilizar:" << endl;
 		cout << "1 - Modo venda" << endl;
 		cout << "2 - Modo estoque" << endl;
@@ -111,20 +147,20 @@ void loja(vector <Produto*>& produtos_da_padaria){
 			switch(escolha){
 				case 1:
 					system(CLEAR);
-					cout << "Modo venda" << endl;
+					modo_venda(produtos_da_padaria,clientes_da_padaria);
 					cout << "\nDigite qualquer tecla para poder continuar..." << endl;
 					cin >> pause;
 					break;
 
 				case 2:
 					system(CLEAR);
-					//cout << "Modo estoque" << endl;
 					modo_estoque(produtos_da_padaria);
 					break;
 				
 				case 3:
 					system(CLEAR);
 					cout << "Modo recomendação" << endl;
+				//	modo_recomendacao();
 					cout << "\nDigite qualquer tecla para poder continuar..." << endl;
 					cin >> pause;
 					break;
@@ -138,20 +174,26 @@ void loja(vector <Produto*>& produtos_da_padaria){
 	}
 }
 
+void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria){
+	cout << "ENOIS" << endl;
+}
+
 void modo_estoque(vector <Produto*>& produtos_da_padaria){
 	char pause;
 	string nome,categorias;
 	int escolha, quantidade, quantidade_categorias, quantidade_nova;
+	float preco;
 	bool continua = true,existe;
 	Produto *produto_da_padaria;
 	while(continua){
 		system(CLEAR);
+		cout << "---------------MODO ESTOQUE---------------\n";
 		cout << "Digite a opção desejada:" << endl;
 		cout << "1 - Listar produtos que há na loja." << endl;
 		cout << "2 - Adicionar produtos." << endl;
 		cout << "0 - voltar para o menu" << endl;
 		cout << "->> ";
-		cin >> escolha;
+		escolha = getInput<int>();
 
 		if(escolha >= 0 && escolha <= 2){
 			switch(escolha){
@@ -164,8 +206,13 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 							cout << buscador -> get_nome() << endl;
 							cout << "Quantidade: ";
 							cout << buscador ->get_quantidade() << endl;
+							cout << "Preço: ";
+							cout << buscador ->get_preco() << endl;
 							cout << "Categorias:" << endl;
-							buscador -> print_categorias();
+							auto categ = buscador->get_categorias();
+							for(string categories : categ){
+								cout << categories << endl;
+							}
 						}
 						cout << "-------------------------------------\n";
 					}
@@ -181,7 +228,7 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 					existe = false;
 					produto_da_padaria = new Produto();
 					cout << "Digite o nome do produto que deseja adicionar:" << endl;
-					cin >> nome;
+					nome = getString();
 					for(Produto *buscador : produtos_da_padaria){
 						if(buscador->get_nome() == nome)
 							existe = true;
@@ -191,15 +238,19 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 						produto_da_padaria->set_nome(nome);
 
 						cout << "Digite a quantidade do produto que deseja adicionar:" << endl;
-						cin >> quantidade;
+						quantidade = getInput<int>();
 						produto_da_padaria->set_quantidade(quantidade);
 							
+						cout << "Digite o preço do produto:" << endl;
+						preco = getInput<float>();
+						produto_da_padaria->set_preco(preco);
+
 						cout << "Digite quantas categorias o produto pertence:" << endl;
-						cin >> quantidade_categorias;
+						quantidade_categorias = getInput<int>();
 					
 						while(quantidade_categorias--){
 							cout << "Digite a categoria do produto:\n";
-							cin >> categorias;
+							categorias = getString();
 							produto_da_padaria->set_categorias(categorias);
 						}
 
