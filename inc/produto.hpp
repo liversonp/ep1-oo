@@ -12,6 +12,7 @@ private:
 	vector <string> categorias;
 	string nome;
 	int quantidade;
+	float preco;
 public:
 	Produto();
 	Produto(string nome, int quantidade);
@@ -20,8 +21,10 @@ public:
 	string get_nome();
 	void set_quantidade(int quantidade);
 	int get_quantidade();
+	void set_preco(float preco);
+	float get_preco();
 	void set_categorias(string categoria);
-	void print_categorias();
+	vector <string> get_categorias();
 
 };
 
