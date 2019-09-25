@@ -7,6 +7,7 @@ using namespace std;
 Produto::Produto(){
 	set_nome("");
 	set_quantidade(0);
+	set_preco(0.0);
 }
 
 Produto::Produto(string nome, int quantidade){
@@ -32,16 +33,18 @@ int Produto::get_quantidade(){
 	return quantidade;
 }
 
+void Produto::set_preco(float preco){
+	this ->preco = preco;
+}
+
+float Produto::get_preco(){
+	return preco;
+}
+
 void Produto::set_categorias(string categoria){
 	categorias.push_back(categoria);
 }
 
-void Produto::print_categorias(){
-	for(int i=0;i< (int)categorias.size();++i){
-		if(i != (int)categorias.size()-1)
-			cout << categorias[i] << ", ";
-
-		else
-			cout << categorias[i] << endl;
-	}
+vector <string> Produto::get_categorias(){
+	return this->categorias;
 }
