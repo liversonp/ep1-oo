@@ -319,9 +319,9 @@ void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_a
 			cout << "Não foi possível realizar a compra devido aos seguintes produtos:" << endl;
 			for(int i=0;i<(int) produtos_que_impedem_compra.size(); ++i){
 				if(i == (int)produtos_que_impedem_compra.size()-1)
-					cout << produtos_que_impedem_compra[i] << " ";
-				else
 					cout << produtos_que_impedem_compra[i] << endl;
+				else
+					cout << produtos_que_impedem_compra[i] << ", ";
 			}
 		}
 
@@ -402,10 +402,10 @@ void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atu
 			cout << "Não foi possível realizar a compra devido aos seguintes produtos:" << endl;
 			for(int i=0;i<(int) produtos_que_impedem_compra.size(); ++i){
 				if(i == (int)produtos_que_impedem_compra.size()-1)
-					cout << produtos_que_impedem_compra[i] << " ";
+					cout << produtos_que_impedem_compra[i] << endl;
 
 				else
-					cout << produtos_que_impedem_compra[i] << endl;
+					cout << produtos_que_impedem_compra[i] << ", ";
 			}
 		}
 
