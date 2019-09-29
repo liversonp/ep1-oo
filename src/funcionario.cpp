@@ -4,6 +4,15 @@
 
 using namespace std;
 
+Funcionario::Funcionario(){
+    set_nome("");
+    set_idade(0);
+    set_cpf("");
+    set_email("");
+    set_funcao("");
+    set_senha("");
+}
+
 Funcionario::Funcionario(string nome, int idade, string cpf, string email, string funcao, string senha){
     set_nome(nome);
     set_idade(idade);
