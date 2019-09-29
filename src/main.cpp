@@ -129,7 +129,7 @@ void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
 void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 	ifstream arquivo;
 	Cliente * cliente_do_arquivo;
-	string entrada, caminho = "./doc/clientes.txt";
+	string entrada,auxiliar = "", caminho = "./doc/clientes.txt";
 	int linha = 1, idade;
 
 	arquivo.open(caminho);
@@ -151,7 +151,10 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 
 			else{
 				if(entrada[0] != '#'){
-					cliente_do_arquivo->set_produtos_comprados(entrada);
+					if(auxiliar != entrada){
+						cliente_do_arquivo->set_produtos_comprados(entrada);
+					}
+					auxiliar = entrada;
 				}
 
 				else{
@@ -169,7 +172,7 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 void associados_arquivados(vector <Associado*>& clientes_associados){
 	ifstream arquivo;
 	Associado *socio_do_arquivo;
-	string entrada, caminho = "./doc/associados.txt";
+	string entrada,auxiliar = "", caminho = "./doc/associados.txt";
 	int linha = 1, idade;
 
 	arquivo.open(caminho);
@@ -191,7 +194,10 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 
 			else{
 				if(entrada[0] != '#'){
-					socio_do_arquivo->set_produtos_comprados(entrada);
+					if(auxiliar != entrada){
+						socio_do_arquivo->set_produtos_comprados(entrada);
+					}
+					auxiliar = entrada;
 				}
 
 				else{
@@ -208,7 +214,7 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 	ifstream arquivo;
 	Produto *produtos_do_arquivo;
-	string entrada, caminho = "./doc/produtos.txt";
+	string entrada, auxiliar = "", caminho = "./doc/produtos.txt";
 	int linha = 1, quantidade;
 	float preco;
 
@@ -232,7 +238,10 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 
 			else{
 				if(entrada[0] != '#'){
-					produtos_do_arquivo->set_categorias(entrada);
+					if(auxiliar != entrada){
+						produtos_do_arquivo->set_categorias(entrada);
+					}
+					auxiliar = entrada;
 				}
 
 				else{
