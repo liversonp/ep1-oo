@@ -700,7 +700,7 @@ void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atu
 
 void modo_estoque(vector <Produto*>& produtos_da_padaria){
 	char pause;
-	string nome,categorias;
+	string nome,categorias, auxiliar;
 	int escolha, quantidade, quantidade_categorias, quantidade_nova;
 	float preco;
 	bool continua = true,existe;
@@ -747,6 +747,7 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 
 				case 2:
 					system(CLEAR);
+					auxiliar = "";
 					existe = false;
 					produto_da_padaria = new Produto();
 					cout << "Digite o nome do produto que deseja adicionar:" << endl;
@@ -771,8 +772,13 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 						quantidade_categorias = getInput<int>();
 					
 						while(quantidade_categorias--){
-							cout << "Digite a categoria do produto:\n";
+							cout << "Digite a categoria do produto:" << endl;
 							categorias = getString();
+							while(categorias == auxiliar){
+								cout << "Dado repetido, digite outra categoria!" << endl;
+								categorias = getString();
+							}
+							auxiliar = categorias;
 							produto_da_padaria->set_categorias(categorias);
 						}
 
