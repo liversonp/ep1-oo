@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <cstdio>
 #include <vector>
 #include <algorithm>
 #include <cmath>
@@ -41,7 +42,6 @@ void arquivar_associados(vector <Associado*>& clientes_associados);
 void arquivar_produtos(vector <Produto*>& produtos_da_padaria);
 
 int main(){
-	char a;
 	vector <Cliente*> clientes;
 	vector <Funcionario*> funcionarios;
 	vector <Produto*> produtos;
@@ -51,7 +51,6 @@ int main(){
 	clientes_arquivados(clientes);
 	associados_arquivados(clientes_associados);
 	produtos_arquivados(produtos);
-	cin >> a;
 	menu_funcionario(funcionarios);
 	loja(produtos,clientes,clientes_associados);
 	arquivar_funcionarios(funcionarios);
@@ -124,6 +123,7 @@ void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
 			linha++;
 		}
 	}
+	remove("./doc/funcionarios.txt");
 }
 
 void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
@@ -162,6 +162,8 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 			linha++;
 		}
 	}
+	remove("./doc/clientes.txt");
+
 }
 
 void associados_arquivados(vector <Associado*>& clientes_associados){
@@ -200,6 +202,7 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 			linha++;
 		}
 	}
+	remove("./doc/associados.txt");
 }
 
 void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
@@ -240,6 +243,7 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 			linha++;
 		}
 	}
+	remove("./doc/produtos.txt");
 }
 
 void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
@@ -254,9 +258,15 @@ void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
 			arquivo << funcionario->get_email() << "\n";
 			arquivo << funcionario->get_funcao() << "\n";
 			arquivo << funcionario->get_senha() << "\n";
-		}
+		}	
 		arquivo.close();
 	}
+	for(auto funcionario : funcionarios_cadastrados){
+		delete funcionario;
+	}
+
+	while(!funcionarios_cadastrados.empty())
+		funcionarios_cadastrados.pop_back();
 }
 
 void arquivar_clientes(vector <Cliente*>& clientes_da_padaria){
@@ -275,6 +285,9 @@ void arquivar_clientes(vector <Cliente*>& clientes_da_padaria){
 		}
 		arquivo.close();
 	}
+
+	while(!clientes_da_padaria.empty())
+		clientes_da_padaria.pop_back();
 }
 
 void arquivar_associados(vector <Associado*>& clientes_associados){
@@ -293,6 +306,9 @@ void arquivar_associados(vector <Associado*>& clientes_associados){
 		}
 		arquivo.close();
 	}
+
+	while(!clientes_associados.empty())
+		clientes_associados.pop_back();
 }
 
 void arquivar_produtos(vector <Produto*>& produtos_da_padaria){
@@ -311,6 +327,9 @@ void arquivar_produtos(vector <Produto*>& produtos_da_padaria){
 		}
 		arquivo.close();
 	}
+	
+	while(!produtos_da_padaria.empty())
+		produtos_da_padaria.pop_back();
 }
 
 // criando o login do funcionario para poder utilizar a plataforma
