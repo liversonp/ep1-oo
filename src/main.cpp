@@ -150,7 +150,7 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 			}
 
 			else{
-				if(entrada[0] != "#"){
+				if(entrada[0] != '#'){
 					cliente_do_arquivo->set_produtos_comprados(entrada);
 				}
 
@@ -188,7 +188,7 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 			}
 
 			else{
-				if(entrada[0] != "#"){
+				if(entrada[0] != '#'){
 					socio_do_arquivo->set_produtos_comprados(entrada);
 				}
 
@@ -206,32 +206,34 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 	ifstream arquivo;
 	Produto *produtos_do_arquivo;
 	string entrada, caminho = "./doc/produtos.txt";
-	int linha = 1, idade;
+	int linha = 1, quantidade;
+	float preco;
 
 	arquivo.open(caminho);
 	if(arquivo.is_open()){
 		produtos_do_arquivo = new Produto();
 		while(getline(arquivo,entrada)){
 			if(linha == 1){
-				socio_do_arquivo->set_nome(entrada);
+				produtos_do_arquivo->set_nome(entrada);
 			}
 
 			else if(linha == 2){
-				idade = stoi(entrada);
-				socio_do_arquivo->set_idade(idade);
+				quantidade = stoi(entrada);
+				produtos_do_arquivo->set_quantidade(quantidade);
 			}
 
 			else if(linha == 3){
-				socio_do_arquivo->set_cpf(entrada);
+				preco = stof(entrada);
+				produtos_do_arquivo->set_preco(preco);
 			}
 
 			else{
-				if(entrada[0] != "#"){
-					socio_do_arquivo->set_produtos_comprados(entrada);
+				if(entrada[0] != '#'){
+					produtos_do_arquivo->set_categorias(entrada);
 				}
 
 				else{
-					clientes_associados.push_back(socio_do_arquivo);
+					produtos_da_padaria.push_back(produtos_do_arquivo);
 					linha = 0;
 				}
 			}
