@@ -22,6 +22,10 @@ using namespace std;
 string get_string();
 template <typename T1>
 T1 getInput();
+void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados);
+void clientes_arquivados(vector <Cliente*>& clientes_da_padaria);
+void associados_arquivados(vector <Associado*>& clientes_associados);
+void produtos_arquivados(vector <Produto*>& produtos_da_padaria);
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados);
 void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
 void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
@@ -31,14 +35,29 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria);
 void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
 void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Associado*>& clientes_associados, string nome_do_cliente); //recomendação para clientes associados
 void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, string nome_do_cliente); //recomendação para clientes normais
+void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados);
+void arquivar_clientes(vector <Cliente*>& clientes_da_padaria);
+void arquivar_associados(vector <Associado*>& clientes_associados);
+void arquivar_produtos(vector <Produto*>& produtos_da_padaria);
 
 int main(){
+	char a;
 	vector <Cliente*> clientes;
 	vector <Funcionario*> funcionarios;
 	vector <Produto*> produtos;
 	vector <Associado*> clientes_associados;
+
+	funcionarios_arquivados(funcionarios);
+	clientes_arquivados(clientes);
+	associados_arquivados(clientes_associados);
+	produtos_arquivados(produtos);
+	cin >> a;
 	menu_funcionario(funcionarios);
 	loja(produtos,clientes,clientes_associados);
+	arquivar_funcionarios(funcionarios);
+	arquivar_clientes(clientes);
+	arquivar_associados(clientes_associados);
+	arquivar_produtos(produtos);
 }
 
 //apenas para pegar o nome de pessoas, produtos e variaveis do tipo string
@@ -66,8 +85,233 @@ T1 getInput(){
     }
 }
 
-// criando o login do funcionario para poder utilizar a plataforma
+void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
+	ifstream arquivo;
+	Funcionario *funcionario_do_arquivo;
+	string entrada, caminho = "./doc/funcionarios.txt";
+	int linha = 1,idade;
 
+	arquivo.open(caminho);
+	if(arquivo.is_open()){
+		funcionario_do_arquivo = new Funcionario();
+		while(getline(arquivo,entrada)){
+			if(linha == 1){
+				funcionario_do_arquivo->set_nome(entrada);
+			}
+
+			else if(linha == 2){
+				idade = stoi(entrada);
+				funcionario_do_arquivo->set_idade(idade);
+			}
+
+			else if(linha == 3){
+				funcionario_do_arquivo->set_cpf(entrada);
+			}
+
+			else if(linha == 4){
+				funcionario_do_arquivo->set_email(entrada);
+			}
+
+			else if(linha == 5){
+				funcionario_do_arquivo->set_funcao(entrada);
+			}
+
+			else if(linha == 6){
+				funcionario_do_arquivo->set_senha(entrada);
+				funcionarios_cadastrados.push_back(funcionario_do_arquivo);
+				linha = 0;
+			}
+			linha++;
+		}
+	}
+}
+
+void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
+	ifstream arquivo;
+	Cliente * cliente_do_arquivo;
+	string entrada, caminho = "./doc/clientes.txt";
+	int linha = 1, idade;
+
+	arquivo.open(caminho);
+	if(arquivo.is_open()){
+		cliente_do_arquivo = new Cliente();
+		while(getline(arquivo,entrada)){
+			if(linha == 1){
+				cliente_do_arquivo->set_nome(entrada);
+			}
+
+			else if(linha == 2){
+				idade = stoi(entrada);
+				cliente_do_arquivo->set_idade(idade);
+			}
+
+			else if(linha == 3){
+				cliente_do_arquivo->set_cpf(entrada);
+			}
+
+			else{
+				if(entrada[0] != "#"){
+					cliente_do_arquivo->set_produtos_comprados(entrada);
+				}
+
+				else{
+					clientes_da_padaria.push_back(cliente_do_arquivo);
+					linha = 0;
+				}
+			}
+			linha++;
+		}
+	}
+}
+
+void associados_arquivados(vector <Associado*>& clientes_associados){
+	ifstream arquivo;
+	Associado *socio_do_arquivo;
+	string entrada, caminho = "./doc/associados.txt";
+	int linha = 1, idade;
+
+	arquivo.open(caminho);
+	if(arquivo.is_open()){
+		socio_do_arquivo = new Associado();
+		while(getline(arquivo,entrada)){
+			if(linha == 1){
+				socio_do_arquivo->set_nome(entrada);
+			}
+
+			else if(linha == 2){
+				idade = stoi(entrada);
+				socio_do_arquivo->set_idade(idade);
+			}
+
+			else if(linha == 3){
+				socio_do_arquivo->set_cpf(entrada);
+			}
+
+			else{
+				if(entrada[0] != "#"){
+					socio_do_arquivo->set_produtos_comprados(entrada);
+				}
+
+				else{
+					clientes_associados.push_back(socio_do_arquivo);
+					linha = 0;
+				}
+			}
+			linha++;
+		}
+	}
+}
+
+void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
+	ifstream arquivo;
+	Produto *produtos_do_arquivo;
+	string entrada, caminho = "./doc/produtos.txt";
+	int linha = 1, idade;
+
+	arquivo.open(caminho);
+	if(arquivo.is_open()){
+		produtos_do_arquivo = new Produto();
+		while(getline(arquivo,entrada)){
+			if(linha == 1){
+				socio_do_arquivo->set_nome(entrada);
+			}
+
+			else if(linha == 2){
+				idade = stoi(entrada);
+				socio_do_arquivo->set_idade(idade);
+			}
+
+			else if(linha == 3){
+				socio_do_arquivo->set_cpf(entrada);
+			}
+
+			else{
+				if(entrada[0] != "#"){
+					socio_do_arquivo->set_produtos_comprados(entrada);
+				}
+
+				else{
+					clientes_associados.push_back(socio_do_arquivo);
+					linha = 0;
+				}
+			}
+			linha++;
+		}
+	}
+}
+
+void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
+	ofstream arquivo;
+	string caminho = "./doc/funcionarios.txt";
+	if(funcionarios_cadastrados.size() != 0){
+		arquivo.open(caminho,ios::app);
+		for(auto funcionario : funcionarios_cadastrados){
+			arquivo << funcionario->get_nome() << "\n";
+			arquivo << funcionario->get_idade() << "\n";
+			arquivo << funcionario->get_cpf() << "\n";
+			arquivo << funcionario->get_email() << "\n";
+			arquivo << funcionario->get_funcao() << "\n";
+			arquivo << funcionario->get_senha() << "\n";
+		}
+		arquivo.close();
+	}
+}
+
+void arquivar_clientes(vector <Cliente*>& clientes_da_padaria){
+	ofstream arquivo;
+	string caminho = "./doc/clientes.txt";
+	if(clientes_da_padaria.size() != 0){
+		arquivo.open(caminho,ios::app);
+		for(auto cliente : clientes_da_padaria){
+			arquivo << cliente->get_nome() << "\n";
+			arquivo << cliente->get_idade() << "\n";
+			arquivo << cliente->get_cpf() << "\n";
+			for(auto produtos_cliente: cliente->get_produtos_comprados()){
+				arquivo << produtos_cliente << "\n";
+			}
+			arquivo << "#\n";
+		}
+		arquivo.close();
+	}
+}
+
+void arquivar_associados(vector <Associado*>& clientes_associados){
+	ofstream arquivo;
+	string caminho = "./doc/associados.txt";
+	if(clientes_associados.size() != 0){
+		arquivo.open(caminho,ios::app);
+		for(auto socio : clientes_associados){
+			arquivo << socio->get_nome() << "\n";
+			arquivo << socio->get_idade() << "\n";
+			arquivo << socio->get_cpf() << "\n";
+			for(auto produtos_socio : socio->get_produtos_comprados()){
+				arquivo << produtos_socio << "\n";
+			}
+			arquivo << "#\n";
+		}
+		arquivo.close();
+	}
+}
+
+void arquivar_produtos(vector <Produto*>& produtos_da_padaria){
+	ofstream arquivo;
+	string caminho = "./doc/produtos.txt";
+	if(produtos_da_padaria.size() != 0){
+		arquivo.open(caminho,ios::app);
+		for(auto produto : produtos_da_padaria){
+			arquivo << produto->get_nome() << "\n";
+			arquivo << produto->get_quantidade() << "\n";
+			arquivo << produto->get_preco() << "\n";
+			for(auto categoria : produto->get_categorias()){
+				arquivo << categoria << "\n";
+			}
+			arquivo << "#\n";
+		}
+		arquivo.close();
+	}
+}
+
+// criando o login do funcionario para poder utilizar a plataforma
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	string nome,cpf,email,funcao, senha;
 	int idade, escolha;
@@ -236,15 +480,9 @@ void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clien
 		cout << "Deseja ser associado?" << endl;
 		cout << "Benefícios:" << endl;
 		cout << "Terá 15% de desconto em qualquer produto comprado na padaria;" << endl;
-		cout << "Caso compre no cartão não precisará pagar a taxa de cartão de crédito ou débito" << endl;
 		resposta = getString();
 
 		if(resposta == "sim"){
-			cliente_atual = new Cliente();
-			cliente_atual->set_nome(nome_do_cliente);
-			cliente_atual->set_idade(idade_do_cliente);
-			cliente_atual->set_cpf(cpf_do_cliente);
-			clientes_da_padaria.push_back(cliente_atual);
 			cliente_associado = new Associado(nome_do_cliente,idade_do_cliente,cpf_do_cliente);
 			clientes_associados.push_back(cliente_associado);
 			processo_venda(produtos_da_padaria,cliente_associado);
@@ -552,11 +790,15 @@ void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>
 			if(buscador->get_nome() == nome_do_cliente){
 				cout << "Cliente encontrado com sucesso" << endl;
 				cliente_encontrado = true;
-				for(auto busca_socio : clientes_associados)
-					if(busca_socio->get_nome() == nome_do_cliente)
-						cliente_socio = true;
 			}
 		}
+
+		for(auto busca_socio : clientes_associados){
+			if(busca_socio->get_nome() == nome_do_cliente){
+				cliente_socio = true;
+				cliente_encontrado = true;
+			}
+		}			
 
 		if(cliente_encontrado == false){
 			cout << "Nome do cliente digitado errado!!" << endl;
