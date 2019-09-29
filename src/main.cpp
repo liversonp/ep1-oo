@@ -626,9 +626,9 @@ void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Assoc
 	}
 	else{
 		for(auto const &recomendacoes : produtos_recomendados){
-			if(contador > 10)
+			if(contador >= 10)
 				break;
-			
+
 			cout<< endl << "---------------------------------------------------------" << endl;
 			cout << "Produto: " << recomendacoes.second << endl;
 			cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
@@ -642,7 +642,7 @@ void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Clien
 	vector <string> produtos;
 	vector <string> categorias;
 	set <pair<int,string>> produtos_recomendados;
-	int categorias_em_comum;
+	int categorias_em_comum, contador=0;
 	bool nao_recomendar;
 	for(auto buscador_cliente : clientes_da_padaria){
 		if(nome_do_cliente == buscador_cliente->get_nome()){
@@ -679,10 +679,24 @@ void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Clien
 		}
 	}
 	
-	for(auto const &recomendacoes : produtos_recomendados){
+	if(produtos_recomendados.size() <= 10){
+		for(auto const &recomendacoes : produtos_recomendados){
+			cout<< endl << "---------------------------------------------------------" << endl;
+			cout << "Produto: " << recomendacoes.second << endl;
+			cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
+		}
 		cout<< endl << "---------------------------------------------------------" << endl;
-		cout << "Produto: " << recomendacoes.second << endl;
-		cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
 	}
-	cout<< endl << "---------------------------------------------------------" << endl;
+	else{
+		for(auto const &recomendacoes : produtos_recomendados){
+			if(contador >= 10)
+				break;
+
+			cout<< endl << "---------------------------------------------------------" << endl;
+			cout << "Produto: " << recomendacoes.second << endl;
+			cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
+			contador++;
+		}
+		cout<< endl << "---------------------------------------------------------" << endl;
+	}
 }
