@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
+#include <algorithm>
+#include <cmath>
 #include "funcionario.hpp"
 #include "produto.hpp"
 #include "cliente.hpp"
@@ -23,10 +25,12 @@ T1 getInput();
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados);
 void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
 void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
-void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_associado); // processo de venda para o cliente associado.
-void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atual); // processo de venda para o cliente normal.
+void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_associado); // processo de venda para o clientes associados.
+void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atual); // processo de venda para o clientes normais.
 void modo_estoque(vector <Produto*>& produtos_da_padaria);
-//void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria);
+void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Associado*>& clientes_associados, string nome_do_cliente); //recomendação para clientes associados
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, string nome_do_cliente); //recomendação para clientes normais
 
 int main(){
 	vector <Cliente*> clientes;
@@ -72,8 +76,8 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	Funcionario *funcionario_da_padaria;
 	while(menu_funcionario){
 		system(CLEAR);
-		cout << "---------------MENU DE FUNCIONÁRIOS---------------\n";
-		cout << "Digite o número respectivo ao que deseja utilizar:\n" << endl;
+		cout << "---------------MENU DE FUNCIONÁRIOS---------------" << endl;
+		cout << "Digite o número respectivo ao que deseja utilizar:" << endl << endl;
 		cout << "1 - Entrar no sistema" << endl;
 		cout << "2 - Registrar um funcionario" << endl;
 		cout << "->> ";
@@ -82,6 +86,8 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 		if(escolha >= 1 && escolha <= 2){
 			switch(escolha){
 				case 1:
+					system(CLEAR);
+					cout << "---------------LOGIN DE FUNCIONÁRIOS---------------" << endl;
 					cout << "Digite o funcionário que irá utilizar a plataforma: ";
 					nome = getString();
 
@@ -97,9 +103,17 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 					}
 					if(usuario_correto == true)
 						menu_funcionario = false;
+
+					else{
+					cout << "Funcionario ou senha errado!!" << endl;
+					cout << "\nDigite qualquer tecla para continuar..." << endl;
+					cin >> continuar;
+					}
 					break;
 
 				case 2:
+					system(CLEAR);
+					cout << "---------------REGISTRO DE FUNCIONÁRIOS---------------" << endl;
 					cout<< "Digite o nome do funcionário: ";
 					nome = getString();
 
@@ -124,7 +138,6 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 
 					funcionario_da_padaria = new Funcionario(nome,idade,cpf,email,funcao,senha);
 					funcionarios_cadastrados.push_back(funcionario_da_padaria);
-					//delete funcionario_da_padaria;
 					break;
 			}
 		}
@@ -164,8 +177,7 @@ void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da
 				
 				case 3:
 					system(CLEAR);
-					cout << "Modo recomendação" << endl;
-//					modo_recomendacao(produtos_da_padaria,clientes_da_padaria);
+					modo_recomendacao(produtos_da_padaria, clientes_da_padaria, clientes_associados);
 					cout << "\nDigite qualquer tecla para poder continuar..." << endl;
 					cin >> pause;
 					break;
@@ -297,16 +309,17 @@ void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_a
 		cout << "---------------PRODUTOS NO SEU CARRINHO---------------" << endl;
 		auto produtos_do_cliente = cliente_associado->get_produtos_carrinho();
 		for(auto buscador : produtos_do_cliente){
+			cout<< endl << "---------------------------------------------------------" << endl;
 			cout << "Produto: " <<get<0> (buscador) << endl; 
 			cout << "Quantidade: " << get<1>(buscador) << endl;
 			cout << "valor: R$" << fixed << setprecision(2) << get<2> (buscador) << endl;
 			cliente_associado-> set_produtos_comprados(get<0> (buscador));
 		}
+		cout<< endl << "---------------------------------------------------------" << endl;
 		valor_final = cliente_associado->calculo_pagamento(valor_final_calculo);
 		cliente_associado->set_valor_de_compras(valor_final);
 		cout << "Valor a pagar: R$" << fixed << setprecision(2) << cliente_associado->get_valor_de_compras() << endl;
-		for(auto buscador : produtos_do_cliente){
-			cout << "Produto: " <<get<0> (buscador) << endl; 
+		for(auto buscador : produtos_do_cliente){ 
 			for(auto encontra_produto : produtos_da_padaria){
 				if(get<0>(buscador) == encontra_produto->get_nome()){
 					encontra_produto->set_quantidade(encontra_produto->get_quantidade()-get<1>(buscador));
@@ -379,17 +392,18 @@ void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atu
 		cout << "---------------PRODUTOS NO SEU CARRINHO---------------" << endl;
 		auto produtos_do_cliente = cliente_atual->get_produtos_carrinho();
 		for(auto buscador : produtos_do_cliente){
+			cout<< endl << "---------------------------------------------------------" << endl;
 			cout << "Produto: " <<get<0> (buscador) << endl; 
 			cout << "Quantidade: " << get<1>(buscador) << endl;
 			cout << "valor: R$" << fixed << setprecision(2) << get<2> (buscador) << endl;
 			cliente_atual-> set_produtos_comprados(get<0>(buscador));
 		}
+
 		valor_final = cliente_atual->calculo_pagamento(valor_final_calculo);
 		cliente_atual->set_valor_de_compras(valor_final);
 		cout << "Valor a pagar: R$" << fixed << setprecision(2) << cliente_atual->get_valor_de_compras() << endl;
 
-		for(auto buscador : produtos_do_cliente){
-			cout << "Produto: " <<get<0> (buscador) << endl; 
+		for(auto buscador : produtos_do_cliente){ 
 			for(auto encontra_produto : produtos_da_padaria){
 				if(get<0>(buscador) == encontra_produto->get_nome()){
 					encontra_produto->set_quantidade(encontra_produto->get_quantidade()-get<1>(buscador));
@@ -522,6 +536,153 @@ void modo_estoque(vector <Produto*>& produtos_da_padaria){
 	}
 }
 
-/*void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria){
-	cout << "---------------MODO ESTOQUE---------------" << endl;
-}*/
+void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados){
+	cout << "---------------MODO RECOMENDAÇÃO---------------" << endl;
+	string nome_do_cliente;
+	bool cliente_encontrado = false, cliente_socio = false;
+	if(clientes_da_padaria.empty() && clientes_associados.empty()){
+		cout << "Não há clientes para poder listar recomendações" << endl;
+	}
+
+	else{
+		cout << "Digite o nome completo do cliente: ";
+		nome_do_cliente = getString();
+
+		for(auto buscador : clientes_da_padaria){
+			if(buscador->get_nome() == nome_do_cliente){
+				cout << "Cliente encontrado com sucesso" << endl;
+				cliente_encontrado = true;
+				for(auto busca_socio : clientes_associados)
+					if(busca_socio->get_nome() == nome_do_cliente)
+						cliente_socio = true;
+			}
+		}
+
+		if(cliente_encontrado == false){
+			cout << "Nome do cliente digitado errado!!" << endl;
+		}
+
+		else{
+			if(cliente_socio){
+				processo_recomendacao(produtos_da_padaria,clientes_associados,nome_do_cliente);
+			}
+
+			else{
+				processo_recomendacao(produtos_da_padaria,clientes_da_padaria,nome_do_cliente);
+			}
+		}
+	}
+}
+
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Associado*>& clientes_associados, string nome_do_cliente){
+	vector <string> produtos;
+	vector <string> categorias;
+	set <pair<int,string>> produtos_recomendados;
+	int categorias_em_comum,contador=0;
+	bool nao_recomendar;
+	for(auto buscador_socio : clientes_associados){
+		if(nome_do_cliente == buscador_socio->get_nome()){
+			for(auto produtos_do_cliente : buscador_socio->get_produtos_comprados()){
+				produtos.push_back(produtos_do_cliente);
+				for(auto produtos_estocados : produtos_da_padaria){
+					if(produtos_do_cliente == produtos_estocados->get_nome()){
+						for(auto categorias_dos_produtos : produtos_estocados->get_categorias()){
+							categorias.push_back(categorias_dos_produtos);
+						}
+					}
+				}
+				for(auto produtos_estocados : produtos_da_padaria){
+					nao_recomendar = false;
+					for(int i=0;i<(int)produtos.size();++i){
+						if(produtos_estocados->get_nome() == produtos[i]){
+							nao_recomendar = true;
+						}
+					
+						if(nao_recomendar == false){
+							categorias_em_comum=0;
+							for (int i=0;i< (int)categorias.size();++i){
+								for(auto categorias_dos_produtos : produtos_estocados ->get_categorias()){
+									if(categorias[i] == categorias_dos_produtos){
+										categorias_em_comum++;
+									}
+								}
+							}
+							produtos_recomendados.insert(make_pair((categorias_em_comum*-1),produtos_estocados->get_nome()));
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	if(produtos_recomendados.size() <= 10){
+		for(auto const &recomendacoes : produtos_recomendados){
+			cout<< endl << "---------------------------------------------------------" << endl;
+			cout << "Produto: " << recomendacoes.second << endl;
+			cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
+		}
+		cout<< endl << "---------------------------------------------------------" << endl;
+	}
+	else{
+		for(auto const &recomendacoes : produtos_recomendados){
+			if(contador > 10)
+				break;
+			
+			cout<< endl << "---------------------------------------------------------" << endl;
+			cout << "Produto: " << recomendacoes.second << endl;
+			cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
+			contador++;
+		}
+		cout<< endl << "---------------------------------------------------------" << endl;
+	}
+}
+
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, string nome_do_cliente){
+	vector <string> produtos;
+	vector <string> categorias;
+	set <pair<int,string>> produtos_recomendados;
+	int categorias_em_comum;
+	bool nao_recomendar;
+	for(auto buscador_cliente : clientes_da_padaria){
+		if(nome_do_cliente == buscador_cliente->get_nome()){
+			for(auto produtos_do_cliente : buscador_cliente->get_produtos_comprados()){
+				produtos.push_back(produtos_do_cliente);
+				for(auto produtos_estocados : produtos_da_padaria){
+					if(produtos_do_cliente == produtos_estocados->get_nome()){
+						for(auto categorias_dos_produtos : produtos_estocados->get_categorias()){
+							categorias.push_back(categorias_dos_produtos);
+						}
+					}
+				}
+				for(auto produtos_estocados : produtos_da_padaria){
+					nao_recomendar = false;
+					for(int i=0;i<(int)produtos.size();++i){
+						if(produtos_estocados->get_nome() == produtos[i]){
+							nao_recomendar = true;
+						}
+					
+						if(nao_recomendar == false){
+							categorias_em_comum=0;
+							for (int i=0;i< (int)categorias.size();++i){
+								for(auto categorias_dos_produtos : produtos_estocados ->get_categorias()){
+									if(categorias[i] == categorias_dos_produtos){
+										categorias_em_comum++;
+									}
+								}
+							}
+							produtos_recomendados.insert(make_pair((categorias_em_comum*-1),produtos_estocados->get_nome()));
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	for(auto const &recomendacoes : produtos_recomendados){
+		cout<< endl << "---------------------------------------------------------" << endl;
+		cout << "Produto: " << recomendacoes.second << endl;
+		cout << "Categorias em comum: " << abs(recomendacoes.first) << endl;
+	}
+	cout<< endl << "---------------------------------------------------------" << endl;
+}
