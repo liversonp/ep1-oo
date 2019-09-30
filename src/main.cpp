@@ -19,7 +19,6 @@
 
 using namespace std;
 
-//Catálogo de funções que são utilizadas durante o programa.
 string get_string();
 template <typename T1>
 T1 getInput();
@@ -30,19 +29,18 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria);
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados);
 void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
 void modo_venda(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
-void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_associado); // processo de venda para o clientes associados.
-void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atual); // processo de venda para o clientes normais.
+void processo_venda(vector <Produto*>& produtos_da_padaria, Associado *cliente_associado);
+void processo_venda(vector <Produto*>& produtos_da_padaria, Cliente *cliente_atual);
 void modo_estoque(vector <Produto*>& produtos_da_padaria);
 void modo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, vector <Associado*>& clientes_associados);
-void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Associado*>& clientes_associados, string nome_do_cliente); //recomendação para clientes associados
-void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, string nome_do_cliente); //recomendação para clientes normais
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Associado*>& clientes_associados, string nome_do_cliente);
+void processo_recomendacao(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da_padaria, string nome_do_cliente);
 void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados);
 void arquivar_clientes(vector <Cliente*>& clientes_da_padaria);
 void arquivar_associados(vector <Associado*>& clientes_associados);
 void arquivar_produtos(vector <Produto*>& produtos_da_padaria);
 
 int main(){
-	char a;
 	vector <Cliente*> clientes;
 	vector <Funcionario*> funcionarios;
 	vector <Produto*> produtos;
@@ -60,14 +58,12 @@ int main(){
 	arquivar_produtos(produtos);
 }
 
-//apenas para pegar o nome de pessoas, produtos e variaveis do tipo string
 string getString(){
     string entrada;
     getline(cin, entrada);
     return entrada;
 }
 
-// Serve para colocar as variaveis que não são do tipo string.
 template <typename T1>
 T1 getInput(){
     while(true){
@@ -126,7 +122,6 @@ void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
 		}
 		arquivo.close();
 	}
-	//remove("./doc/funcionarios.txt");
 }
 
 void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
@@ -169,8 +164,6 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 		}
 		arquivo.close();
 	}
-	//remove("./doc/clientes.txt");
-
 }
 
 void associados_arquivados(vector <Associado*>& clientes_associados){
@@ -213,7 +206,6 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 		}
 		arquivo.close();
 	}
-	//remove("./doc/associados.txt");
 }
 
 void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
@@ -258,7 +250,6 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 		}
 		arquivo.close();
 	}
-	//remove("./doc/produtos.txt");
 }
 
 void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
@@ -344,12 +335,11 @@ void arquivar_produtos(vector <Produto*>& produtos_da_padaria){
 		produtos_da_padaria.pop_back();
 }
 
-// criando o login do funcionario para poder utilizar a plataforma
 void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 	string nome,cpf,email,funcao, senha;
 	int idade, escolha;
 	char continuar;
-	bool menu_funcionario = true,usuario_correto = false;
+	bool menu_funcionario = true,usuario_correto = false, ja_existe;
 	Funcionario *funcionario_da_padaria;
 	while(menu_funcionario){
 		system(CLEAR);
@@ -390,31 +380,41 @@ void menu_funcionario(vector <Funcionario*>& funcionarios_cadastrados){
 
 				case 2:
 					system(CLEAR);
+					ja_existe = false;
 					cout << "---------------REGISTRO DE FUNCIONÁRIOS---------------" << endl;
 					cout<< "Digite o nome do funcionário: ";
 					nome = getString();
 
-					cout<< "Digite a idade do funcionário: ";
-					idade = getInput<int>();
+					for(auto funcionario : funcionarios_cadastrados){
+						if(funcionario->get_nome() == nome){
+							cout << "Funcionário já exsitente" << endl;
+							ja_existe = true;
+						}
+					}
 
-					cout << "Digite o CPF do funcionário: ";
-					cpf = getString();
+					if(ja_existe == false){
+						cout<< "Digite a idade do funcionário: ";
+						idade = getInput<int>();
 
-					cout << "Digite o Email do funcionário: ";
-					email = getString();
+						cout << "Digite o CPF do funcionário: ";
+						cpf = getString();
 
-					cout << "Digite a função do funcionário: ";
-					funcao = getString();
+						cout << "Digite o Email do funcionário: ";
+						email = getString();
 
-					cout << "Digite a senha do funcionário(4-16 caracteres sem espaços): ";
-					senha = getString();
+						cout << "Digite a função do funcionário: ";
+						funcao = getString();
 
-					cout << "Funcionario registrado com sucesso!!" << endl;
+						cout << "Digite a senha do funcionário(4-16 caracteres sem espaços): ";
+						senha = getString();
+
+						cout << "Funcionario registrado com sucesso!!" << endl;
+
+						funcionario_da_padaria = new Funcionario(nome,idade,cpf,email,funcao,senha);
+						funcionarios_cadastrados.push_back(funcionario_da_padaria);
+					}
 					cout << "\nDigite qualquer tecla para continuar..." << endl;
 					cin >> continuar;
-
-					funcionario_da_padaria = new Funcionario(nome,idade,cpf,email,funcao,senha);
-					funcionarios_cadastrados.push_back(funcionario_da_padaria);
 					break;
 			}
 		}
@@ -428,7 +428,6 @@ void loja(vector <Produto*>& produtos_da_padaria, vector <Cliente*>& clientes_da
 
 	while(continua){
 		system(CLEAR);
-		//cout << "     Bem vindos à minha loja" << endl;
 		cout << "---------------MENU PRINCIPAL---------------\n";
 		cout << "Digite o modo que deseja utilizar:" << endl;
 		cout << "1 - Modo venda" << endl;
