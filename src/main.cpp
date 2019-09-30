@@ -42,6 +42,7 @@ void arquivar_associados(vector <Associado*>& clientes_associados);
 void arquivar_produtos(vector <Produto*>& produtos_da_padaria);
 
 int main(){
+	char a;
 	vector <Cliente*> clientes;
 	vector <Funcionario*> funcionarios;
 	vector <Produto*> produtos;
@@ -86,15 +87,16 @@ T1 getInput(){
 
 void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
 	ifstream arquivo;
-	Funcionario *funcionario_do_arquivo;
-	string entrada, caminho = "./doc/funcionarios.txt";
+	string nome,cpf,email,funcao,senha,entrada, caminho = "./doc/funcionarios.txt";
 	int linha = 1,idade;
 
-	arquivo.open(caminho);
+	arquivo.open(caminho,ios::in);
 	if(arquivo.is_open()){
-		funcionario_do_arquivo = new Funcionario();
+		Funcionario *funcionario_do_arquivo;
 		while(getline(arquivo,entrada)){
+			
 			if(linha == 1){
+				funcionario_do_arquivo = new Funcionario();
 				funcionario_do_arquivo->set_nome(entrada);
 			}
 
@@ -122,8 +124,9 @@ void funcionarios_arquivados(vector <Funcionario*>& funcionarios_cadastrados){
 			}
 			linha++;
 		}
+		arquivo.close();
 	}
-	remove("./doc/funcionarios.txt");
+	//remove("./doc/funcionarios.txt");
 }
 
 void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
@@ -132,11 +135,11 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 	string entrada,auxiliar = "", caminho = "./doc/clientes.txt";
 	int linha = 1, idade;
 
-	arquivo.open(caminho);
+	arquivo.open(caminho,ios::in);
 	if(arquivo.is_open()){
-		cliente_do_arquivo = new Cliente();
 		while(getline(arquivo,entrada)){
 			if(linha == 1){
+				cliente_do_arquivo = new Cliente();
 				cliente_do_arquivo->set_nome(entrada);
 			}
 
@@ -164,8 +167,9 @@ void clientes_arquivados(vector <Cliente*>& clientes_da_padaria){
 			}
 			linha++;
 		}
+		arquivo.close();
 	}
-	remove("./doc/clientes.txt");
+	//remove("./doc/clientes.txt");
 
 }
 
@@ -175,11 +179,11 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 	string entrada,auxiliar = "", caminho = "./doc/associados.txt";
 	int linha = 1, idade;
 
-	arquivo.open(caminho);
+	arquivo.open(caminho,ios::in);
 	if(arquivo.is_open()){
-		socio_do_arquivo = new Associado();
 		while(getline(arquivo,entrada)){
 			if(linha == 1){
+				socio_do_arquivo = new Associado();
 				socio_do_arquivo->set_nome(entrada);
 			}
 
@@ -207,8 +211,9 @@ void associados_arquivados(vector <Associado*>& clientes_associados){
 			}
 			linha++;
 		}
+		arquivo.close();
 	}
-	remove("./doc/associados.txt");
+	//remove("./doc/associados.txt");
 }
 
 void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
@@ -218,11 +223,11 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 	int linha = 1, quantidade;
 	float preco;
 
-	arquivo.open(caminho);
+	arquivo.open(caminho,ios::in);
 	if(arquivo.is_open()){
-		produtos_do_arquivo = new Produto();
 		while(getline(arquivo,entrada)){
 			if(linha == 1){
+				produtos_do_arquivo = new Produto();
 				produtos_do_arquivo->set_nome(entrada);
 			}
 
@@ -251,15 +256,16 @@ void produtos_arquivados(vector <Produto*>& produtos_da_padaria){
 			}
 			linha++;
 		}
+		arquivo.close();
 	}
-	remove("./doc/produtos.txt");
+	//remove("./doc/produtos.txt");
 }
 
 void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
 	ofstream arquivo;
 	string caminho = "./doc/funcionarios.txt";
 	if(funcionarios_cadastrados.size() != 0){
-		arquivo.open(caminho,ios::app);
+		arquivo.open(caminho,ios::out);
 		for(auto funcionario : funcionarios_cadastrados){
 			arquivo << funcionario->get_nome() << "\n";
 			arquivo << funcionario->get_idade() << "\n";
@@ -270,9 +276,6 @@ void arquivar_funcionarios(vector <Funcionario*>& funcionarios_cadastrados){
 		}	
 		arquivo.close();
 	}
-	for(auto funcionario : funcionarios_cadastrados){
-		delete funcionario;
-	}
 
 	while(!funcionarios_cadastrados.empty())
 		funcionarios_cadastrados.pop_back();
@@ -282,7 +285,7 @@ void arquivar_clientes(vector <Cliente*>& clientes_da_padaria){
 	ofstream arquivo;
 	string caminho = "./doc/clientes.txt";
 	if(clientes_da_padaria.size() != 0){
-		arquivo.open(caminho,ios::app);
+		arquivo.open(caminho,ios::out);
 		for(auto cliente : clientes_da_padaria){
 			arquivo << cliente->get_nome() << "\n";
 			arquivo << cliente->get_idade() << "\n";
@@ -303,7 +306,7 @@ void arquivar_associados(vector <Associado*>& clientes_associados){
 	ofstream arquivo;
 	string caminho = "./doc/associados.txt";
 	if(clientes_associados.size() != 0){
-		arquivo.open(caminho,ios::app);
+		arquivo.open(caminho,ios::out);
 		for(auto socio : clientes_associados){
 			arquivo << socio->get_nome() << "\n";
 			arquivo << socio->get_idade() << "\n";
@@ -324,13 +327,13 @@ void arquivar_produtos(vector <Produto*>& produtos_da_padaria){
 	ofstream arquivo;
 	string caminho = "./doc/produtos.txt";
 	if(produtos_da_padaria.size() != 0){
-		arquivo.open(caminho,ios::app);
+		arquivo.open(caminho,ios::out);
 		for(auto produto : produtos_da_padaria){
 			arquivo << produto->get_nome() << "\n";
 			arquivo << produto->get_quantidade() << "\n";
 			arquivo << produto->get_preco() << "\n";
 			for(auto categoria : produto->get_categorias()){
-				arquivo << categoria << "\n";
+				arquivo << categoria	 << "\n";
 			}
 			arquivo << "#\n";
 		}
