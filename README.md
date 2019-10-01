@@ -18,6 +18,8 @@ Há 2 funções neste modo, escolhendo da mesma forma que os outros menus, a pri
 ### Modo recomendação
 Neste modo, ao colocar somente o nome do cliente vai ser gerado uma lista de produtos que são recomendados para o cliente, primeiramente por ordem de coincidências e caso tenham a mesma quantidade, por ordem lexicográfica.
 
+Observações adicionais, serão recomendados somente produtos que o cliente não tenha comprado, para n ocorrer de recomendar somente os mesmos produtos.
+
 ## Orientações
 Para compilar utilize: make;
 Para rodar utilize: make run;
